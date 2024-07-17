@@ -17,7 +17,9 @@ function App() {
       return users;
     }
     return [...users].filter(user => 
+      user.username.toLowerCase().includes(searchQuery.toLowerCase()) || 
       user.name.firstname.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      user.name.lastname.toLowerCase().includes(searchQuery.toLowerCase()) || 
       user.email.toLowerCase().includes(searchQuery.toLowerCase()) || 
       user.phone.includes(searchQuery)
     );
@@ -34,8 +36,8 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Users</h1>
-      <input placeholder='Search...' value={searchQuery} onChange={e => setSearchQuery(e.target.value)}/>
+      <h1 className='header'>Users</h1>
+      <input placeholder='Search...' value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className='myInput'/>
       <UserList users={filteredUsers} />
     </div>
   );

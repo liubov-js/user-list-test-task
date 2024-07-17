@@ -7,8 +7,8 @@ interface UserCardProps {
 
 const UserCard: FC<UserCardProps> = ({ user }) => {
   return (
-    <div>
-      <div>{user.username}</div>
+    <div className="userCard">
+      <strong>{user.username}</strong>
       <div>email: {user.email}</div>
       <div>phone: {user.phone}</div>
     </div>
