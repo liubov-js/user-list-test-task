@@ -1,24 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
+import { useEffect, useMemo, useState } from 'react';
+import axios from 'axios';
 import './App.css';
+import { IUser } from './types/types';
+import UserList from './components/UserList';
 
 function App() {
+  const [users, setUsers] = useState<IUser[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const filteredUsers: IUser[] = useMemo(() => {
+    if (!searchQuery) {
+      return users;
+    }
+    return [...users].filter(user => 
+      user.name.firstname.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      user.email.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      user.phone.includes(searchQuery)
+    );
+  }, [searchQuery, users]);
+
+  async function fetchUsers() {
+    try {
+      const response = await axios.get<IUser[]>('https://fakestoreapi.com/users?limit=9');
+      setUsers(response.data);
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Users</h1>
+      <input placeholder='Search...' value={searchQuery} onChange={e => setSearchQuery(e.target.value)}/>
+      <UserList users={filteredUsers} />
     </div>
   );
 }
